@@ -8,7 +8,7 @@ hf_logging.disable_progress_bar()
 hf_logging.set_verbosity_error()
 import transformers
 
-from minimal_jlens import JLensModel, fit
+from jlens import JLensModel, fit
 
 PATH = "models/DeepSeek-V2-Lite"
 tok = transformers.AutoTokenizer.from_pretrained(PATH, trust_remote_code=True)

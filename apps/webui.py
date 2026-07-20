@@ -24,8 +24,8 @@ import os
 
 import torch
 
-from minimal_jlens import JLens, JLensModel, fit
-from jlens_repl import FIT_CORPUS, surface_topk, greedy_continue
+from jlens import JLens, JLensModel, fit
+from apps.repl import FIT_CORPUS, surface_topk, greedy_continue
 
 MODEL: JLensModel | None = None
 LENS: JLens | None = None

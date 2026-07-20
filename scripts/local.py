@@ -17,14 +17,14 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).parent.parent
 OUT = ROOT / "out"
 
 MODELS = {
     "mla": {
         "npz": OUT / "v2lite_stats.npz",
         "lens": OUT / "v2lite_chat_lens.pt",
-        "tok_dir": ROOT / "models" / "DeepSeek-V2-Lite-tok",
+        "tok_dir": ROOT / "tokenizer",
         "label": "DeepSeek-V2-Lite (MLA)",
     },
     "gqa": {

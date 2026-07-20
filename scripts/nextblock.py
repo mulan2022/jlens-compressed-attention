@@ -15,7 +15,7 @@ import numpy as np
 import torch
 from safetensors import safe_open
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).parent.parent
 OUT = ROOT / "out"
 
 qwen_snap = sorted((ROOT / "models" / "models--Qwen--Qwen2.5-3B" / "snapshots").iterdir())[-1]

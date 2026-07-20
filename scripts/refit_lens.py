@@ -12,7 +12,7 @@ import os
 import torch
 import transformers
 
-from minimal_jlens import JLensModel, fit
+from jlens import JLensModel, fit
 
 
 def main() -> None:

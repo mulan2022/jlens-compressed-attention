@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from analysis_remote import Weights, orthobasis, agg_energy, haar_null, DEV
+from scripts.remote import Weights, orthobasis, agg_energy, haar_null, DEV
 
 torch.set_grad_enabled(False)
 

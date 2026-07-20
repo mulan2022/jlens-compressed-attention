@@ -21,45 +21,52 @@ J-space is **not** preferentially aligned with the attention read subspace in ei
 ## Project Structure
 
 ```
-├── minimal_jlens.py                  # Core J-lens library (from-scratch, architecture-agnostic)
-├── test_minimal_jlens.py             # Correctness test: VJP estimator vs brute-force Jacobian
+├── jlens/                             # Core library package
+│   ├── __init__.py                    #   Public API: JLens, JLensModel, fit
+│   └── _core.py                       #   Full implementation
 │
-├── jlens_repl.py                     # Interactive terminal REPL — "mind reader" demo
-├── jlens_app.py                      # Gradio web UI for interactive exploration
+├── apps/                              # Interactive demos
+│   ├── repl.py                        #   Terminal REPL — "mind reader"
+│   └── webui.py                       #   Gradio web UI
 │
-├── jlens_stats_direct.py             # Per-token J-space vs. read-subspace statistics
-├── jlens_collect_stats.py            # Older version (Gradio-based, kept for reference)
+├── scripts/                           # Analysis pipeline & utilities
+│   ├── collect_stats.py               #   Per-token J-space vs. read-subspace statistics
+│   ├── remote.py                      #   Cross-layer projection, Haar nulls, positive control
+│   ├── local.py                       #   Z-score distributions, CJK/markup token shares
+│   ├── bootstrap.py                   #   Cluster bootstrap significance tests
+│   ├── nextblock.py                   #   Next-block per-token z-scores (GQA)
+│   ├── nextblock_mla.py              #   Same for MLA
+│   ├── rope.py                        #   RoPE-inclusive read subspace robustness
+│   ├── addendum.py                    #   Raw-W_U control for cross-layer elevation
+│   ├── make_figures.py                #   Generate analysis figures
+│   ├── make_comparison.py             #   MLA vs. GQA comparison figure
+│   ├── refit_lens.py                  #   Batch lens fitting (corpus stability)
+│   ├── compare_refits.py              #   Compare results across lens refits
+│   ├── inspect_read.py                #   Universal read/OV subspace inspector
+│   ├── inspect_mla.py                 #   MLA weight accounting + SVD
+│   ├── plot_stats.py                  #   Older plot script
+│   ├── stats_gradio.py                #   Older stats collector (Gradio-based)
+│   ├── smoke.py                       #   End-to-end smoke test
+│   ├── compat.py                      #   Environment compatibility check
+│   └── diag.py                        #   Diagnostic: BOS behavior
 │
-├── analysis_remote.py                # Cross-layer projection, Haar aggregate nulls, positive control
-├── analysis_local.py                 # Z-score distributions, CJK token share, markup token analysis
-├── analysis_bootstrap.py             # Cluster bootstrap for token-share significance
-├── analysis_nextblock_pertoken.py    # Per-token z-scores vs. next-block read subspace (GQA)
-├── analysis_nextblock_pertoken_mla.py # Same for MLA
-├── analysis_rope.py                  # RoPE-inclusive MLA read subspace robustness check
-├── analysis_addendum.py              # Raw-W_U control for cross-layer elevation
+├── tests/                             # Unit tests
+│   └── test_core.py                   #   VJP estimator vs brute-force Jacobian
 │
-├── inspect_attention_read.py         # Universal read/OV subspace inspector (MLA/GQA/MHA)
-├── inspect_mla_weights.py            # MLA compressed-weight accounting + SVD
+├── corpus/                            # Fitting corpora (corpus-stability experiment)
+│   ├── alt1.txt
+│   └── alt2.txt
 │
-├── make_figures.py                   # Generate analysis figures
-├── make_comparison_figure.py         # MLA vs. GQA comparison figure
-├── jlens_plot.py                     # Older plot script (jlens_collect_stats companion)
+├── tokenizer/                         # DeepSeek-V2-Lite tokenizer (needed for analysis)
 │
-├── refit_lens.py                     # Batch lens fitting (corpus-stability experiment)
-├── compare_refits.py                 # Compare results across lens refits
-├── corpus_alt1.txt                   # Alternate fitting corpus 1
-├── corpus_alt2.txt                   # Alternate fitting corpus 2
+├── out/                               # Pre-computed analysis outputs (.npz, .json, .png)
 │
-├── _smoke_real.py                    # End-to-end smoke test: fit lens + readout
-├── _compat_test.py                   # Environment compatibility check
-├── _diag_gen.py                      # Diagnostic: model forward pass (BOS behavior)
-├── dl_loop.sh                        # Resilient ModelScope download script
-│
-├── out/                              # Analysis outputs (.npz, .json, .png)
-├── models/DeepSeek-V2-Lite-tok/      # Tokenizer for DeepSeek-V2-Lite
-│
-├── README-CN.md                      # Chinese-language background & paper summary
-└── MLA适配原理.md                     # Technical note on MLA adaptation (Chinese)
+├── dl_loop.sh                         # Resilient ModelScope download script
+├── README.md
+├── README-CN.md                       # Chinese-language background & paper summary
+├── MLA适配原理.md                      # Technical note on MLA adaptation (Chinese)
+├── LICENSE
+└── .gitignore
 ```
 
 ## Requirements
@@ -95,13 +102,13 @@ huggingface-cli download Qwen/Qwen2.5-3B --local-dir models/Qwen2.5-3B
 ### 2. Verify Environment
 
 ```bash
-python _compat_test.py
+python scripts/compat.py
 ```
 
 ### 3. Fit a Quick Lens
 
 ```bash
-python _smoke_real.py
+python scripts/smoke.py
 # Fits a lens on 5 paragraphs, layers 13, 17, 21
 # Saves out/v2lite_lens.pt (~65 MB)
 ```
@@ -110,10 +117,10 @@ python _smoke_real.py
 
 ```bash
 # Terminal REPL: type text, see what the model reads out at each layer
-python jlens_repl.py --model models/DeepSeek-V2-Lite --lens out/v2lite_lens.pt
+python apps/repl.py --model models/DeepSeek-V2-Lite --lens out/v2lite_lens.pt
 
 # Web UI (SSH port-forward to your laptop: ssh -L 7860:localhost:7860 ...)
-python jlens_app.py --model models/DeepSeek-V2-Lite --lens out/v2lite_lens.pt --fit
+python apps/webui.py --model models/DeepSeek-V2-Lite --lens out/v2lite_lens.pt --fit
 ```
 
 ## Usage
@@ -121,7 +128,7 @@ python jlens_app.py --model models/DeepSeek-V2-Lite --lens out/v2lite_lens.pt --
 ### Fit a J-lens on Your Own Corpus
 
 ```python
-from minimal_jlens import JLensModel, fit
+from jlens import JLensModel, fit
 import transformers
 
 tok = transformers.AutoTokenizer.from_pretrained("path/to/model", trust_remote_code=True)
@@ -144,67 +151,67 @@ lens.save("out/my_lens.pt")
 
 ```bash
 # 1. Collect per-token statistics
-python jlens_stats_direct.py --model models/DeepSeek-V2-Lite-Chat \
+python scripts/collect_stats.py --model models/DeepSeek-V2-Lite-Chat \
     --lens out/v2lite_chat_lens.pt --layers 9 11 13 15 17 19 21 23 \
     --out out/v2lite_stats.npz
 
-python jlens_stats_direct.py --model models/Qwen2.5-3B \
+python scripts/collect_stats.py --model models/Qwen2.5-3B \
     --lens out/qwen25_lens.pt --layers 12 15 18 21 24 27 30 33 \
     --out out/qwen25_stats.npz
 
 # 2. Cross-layer projection + Haar nulls + positive control
-python analysis_remote.py --model models/DeepSeek-V2-Lite-Chat \
+python scripts/remote.py --model models/DeepSeek-V2-Lite-Chat \
     --lens out/v2lite_chat_lens.pt --out out/mla_remote.npz
-python analysis_remote.py --model models/Qwen2.5-3B \
+python scripts/remote.py --model models/Qwen2.5-3B \
     --lens out/qwen25_lens.pt --out out/gqa_remote.npz
 
 # 3. Distribution analysis + CJK/markup tokens
-python analysis_local.py
+python scripts/local.py
 
 # 4. Bootstrap significance
-python analysis_bootstrap.py
+python scripts/bootstrap.py
 
 # 5. Figures
-python make_figures.py
-python make_comparison_figure.py
+python scripts/make_figures.py
+python scripts/make_comparison.py
 ```
 
 ### Robustness Checks
 
 ```bash
 # RoPE-inclusive read subspace (MLA, rank 576 instead of 512)
-python analysis_rope.py --model models/DeepSeek-V2-Lite-Chat \
+python scripts/rope.py --model models/DeepSeek-V2-Lite-Chat \
     --lens out/v2lite_chat_lens.pt --out out/mla_rope.npz
 
 # Raw unembedding control
-python analysis_addendum.py --model models/DeepSeek-V2-Lite-Chat \
+python scripts/addendum.py --model models/DeepSeek-V2-Lite-Chat \
     --out out/mla_raw.npz
 
 # Corpus stability: refit on disjoint corpora, compare
-python refit_lens.py --model models/DeepSeek-V2-Lite-Chat \
-    --corpus corpus_alt1.txt --layers 9 11 13 15 17 19 21 23 \
+python scripts/refit_lens.py --model models/DeepSeek-V2-Lite-Chat \
+    --corpus corpus/alt1.txt --layers 9 11 13 15 17 19 21 23 \
     --lens out/v2lite_chat_lens_alt1.pt
-python analysis_remote.py --model models/DeepSeek-V2-Lite-Chat \
+python scripts/remote.py --model models/DeepSeek-V2-Lite-Chat \
     --lens out/v2lite_chat_lens_alt1.pt --out out/mla_remote_alt1.npz
-python compare_refits.py
+python scripts/compare_refits.py
 ```
 
 ### Inspect Attention Subspaces
 
 ```bash
 # Architecture detection + subspace rank (no model weights)
-python inspect_attention_read.py --model models/Qwen2.5-3B --dry-run
+python scripts/inspect_read.py --model models/Qwen2.5-3B --dry-run
 
 # Full SVD + unembedding overlap
-python inspect_attention_read.py --model models/Qwen2.5-3B \
+python scripts/inspect_read.py --model models/Qwen2.5-3B \
     --unembed --layers 5 10 15 20 25 30
 
 # J-space energy fraction in read subspaces
-python inspect_attention_read.py --model models/Qwen2.5-3B \
+python scripts/inspect_read.py --model models/Qwen2.5-3B \
     --jspace-lens out/qwen25_lens.pt --layers 8 12 16 20 24 28 32
 
 # MLA-specific: SVD of W_DKV and frozen-attention OV circuit
-python inspect_mla_weights.py --model models/DeepSeek-V2-Lite
+python scripts/inspect_mla.py --model models/DeepSeek-V2-Lite
 ```
 
 ## Why J-lens Needs Zero Changes for MLA/MoE

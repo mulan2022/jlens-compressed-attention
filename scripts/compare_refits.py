@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-OUT = Path(__file__).parent / "out"
+OUT = Path(__file__).parent.parent / "out"
 
 for tag, layers_expected in [("mla", None), ("gqa", None)]:
     fits = {}

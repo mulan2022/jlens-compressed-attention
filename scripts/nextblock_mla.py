@@ -14,7 +14,7 @@ import numpy as np
 import torch
 from safetensors import safe_open
 
-ROOT = Path("/workspace")
+ROOT = Path(__file__).parent.parent
 OUT = ROOT / "out"
 MODEL = ROOT / "models" / "DeepSeek-V2-Lite-Chat"
 

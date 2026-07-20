@@ -17,7 +17,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import TwoSlopeNorm
 
-OUT = Path(__file__).parent / "out"
+OUT = Path(__file__).parent.parent / "out"
 
 CATEGORY_COLORS = {
     "factual_en": "#2196F3", "factual_zh": "#F44336", "code_logic": "#4CAF50",

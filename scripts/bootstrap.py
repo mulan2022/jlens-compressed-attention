@@ -22,7 +22,7 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).parent.parent
 OUT = ROOT / "out"
 N_BOOT = 10_000
 SEED = 12345
@@ -31,9 +31,9 @@ qwen_snap = sorted((ROOT / "models" / "models--Qwen--Qwen2.5-3B" / "snapshots").
 
 MODELS = {
     "mla_chat": {"npz": OUT / "v2lite_stats.npz",
-                 "tok": ROOT / "models" / "DeepSeek-V2-Lite-tok"},
+                 "tok": ROOT / "tokenizer"},
     "mla_base": {"npz": OUT / "v2lite_base_stats.npz",
-                 "tok": ROOT / "models" / "DeepSeek-V2-Lite-tok"},
+                 "tok": ROOT / "tokenizer"},
     "gqa_base": {"npz": OUT / "qwen25_stats.npz", "tok": qwen_snap},
 }
 

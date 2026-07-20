@@ -9,10 +9,7 @@ __pycache__/
 *.blg
 
 # Models (downloaded separately)
-models/DeepSeek-V2-Lite/
-models/DeepSeek-V2-Lite-Chat/
-models/models--Qwen--Qwen2.5-3B/
-!models/DeepSeek-V2-Lite-tok/
+models/
 
 # Large lens files (regeneratable, >50MB each)
 out/*.pt

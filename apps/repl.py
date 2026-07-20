@@ -19,7 +19,7 @@ import os
 
 import torch
 
-from minimal_jlens import JLens, JLensModel, fit
+from jlens import JLens, JLensModel, fit
 
 # Fit prompts must be long enough to clear skip_first=16 (need >17 tokens), so
 # these are paragraphs, not one-liners. The paper averages over ~1000; add more

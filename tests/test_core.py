@@ -15,7 +15,7 @@ from types import SimpleNamespace
 import torch
 from torch import nn
 
-from minimal_jlens import (
+from jlens._core import (
     JLensModel,
     _Recorder,
     jacobian_for_prompt,

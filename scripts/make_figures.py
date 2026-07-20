@@ -9,7 +9,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-OUT = Path(__file__).parent / "out"
+OUT = Path(__file__).parent.parent / "out"
 plt.rcParams.update({"font.size": 9, "axes.titlesize": 10})
 
 mla = np.load(OUT / "mla_remote.npz", allow_pickle=True)
