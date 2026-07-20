@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+
+# LaTeX build artifacts
+*.aux
+*.out
+*.log
+*.blg
+
+# Models (downloaded separately)
+models/DeepSeek-V2-Lite/
+models/DeepSeek-V2-Lite-Chat/
+models/models--Qwen--Qwen2.5-3B/
+!models/DeepSeek-V2-Lite-tok/
+
+# Large lens files (regeneratable, >50MB each)
+out/*.pt
+
+# Anthropic's reference implementation (clone separately if needed)
+jacobian-lens/
+
+# Duplicate ACL style files
+acl-style-files-master/
+
+# HuggingFace cache locks
+models/.locks/
+
+# Paper (separate repo / not public yet)
+paper.tex
+paper.pdf
+paper.bbl
+references.bib
+acl.sty
+acl_natbib.bst
+acl-style-files-master/
+
+# Junk
+jlens_code_bundle.tar.gz
+*.zip

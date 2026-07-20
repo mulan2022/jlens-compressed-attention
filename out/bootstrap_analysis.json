@@ -1,0 +1,112 @@
+{
+ "mla_chat": {
+  "vocab_cjk_share": 0.18051638967220657,
+  "vocab_markup_share": 0.0373792524149517,
+  "cjk_en_unweighted": {
+   "observed": 0.314453125,
+   "ci95": [
+    0.263671875,
+    0.37109375
+   ],
+   "prior": 0.18051638967220657,
+   "p_one_sided_vs_prior": 0.0001,
+   "p_raw_count": 0
+  },
+  "cjk_en_prob_weighted": {
+   "observed": 0.28867802591944136,
+   "ci95": [
+    0.1879480312496791,
+    0.39615583094803675
+   ],
+   "prior": 0.18051638967220657,
+   "p_one_sided_vs_prior": 0.0172,
+   "p_raw_count": 172
+  },
+  "markup_all_unweighted": {
+   "observed": 0.09435096153846154,
+   "ci95": [
+    0.060396634615384616,
+    0.1349158653846154
+   ],
+   "prior": 0.0373792524149517,
+   "p_one_sided_vs_prior": 0.0001,
+   "p_raw_count": 1
+  }
+ },
+ "mla_base": {
+  "vocab_cjk_share": 0.18051638967220657,
+  "vocab_markup_share": 0.0373792524149517,
+  "cjk_en_unweighted": {
+   "observed": 0.3486328125,
+   "ci95": [
+    0.279296875,
+    0.421875
+   ],
+   "prior": 0.18051638967220657,
+   "p_one_sided_vs_prior": 0.0001,
+   "p_raw_count": 0
+  },
+  "cjk_en_prob_weighted": {
+   "observed": 0.3331235756015585,
+   "ci95": [
+    0.22540364151505768,
+    0.45243220725333877
+   ],
+   "prior": 0.18051638967220657,
+   "p_one_sided_vs_prior": 0.0017,
+   "p_raw_count": 17
+  },
+  "markup_all_unweighted": {
+   "observed": 0.11177884615384616,
+   "ci95": [
+    0.0766150841346154,
+    0.15204326923076922
+   ],
+   "prior": 0.0373792524149517,
+   "p_one_sided_vs_prior": 0.0001,
+   "p_raw_count": 0
+  }
+ },
+ "gqa_base": {
+  "vocab_cjk_share": 0.17189859229222298,
+  "vocab_markup_share": 0.06381828371740349,
+  "cjk_en_unweighted": {
+   "observed": 0.185546875,
+   "ci95": [
+    0.138671875,
+    0.236328125
+   ],
+   "prior": 0.17189859229222298,
+   "p_one_sided_vs_prior": 0.3046,
+   "p_raw_count": 3046
+  },
+  "cjk_en_prob_weighted": {
+   "observed": 0.15457052338319444,
+   "ci95": [
+    0.0792162115548365,
+    0.2431756183748339
+   ],
+   "prior": 0.17189859229222298,
+   "p_one_sided_vs_prior": 0.6756,
+   "p_raw_count": 6756
+  },
+  "markup_all_unweighted": {
+   "observed": 0.23347355769230768,
+   "ci95": [
+    0.19621394230769232,
+    0.27103365384615385
+   ],
+   "prior": 0.06381828371740349,
+   "p_one_sided_vs_prior": 0.0001,
+   "p_raw_count": 0
+  }
+ },
+ "mla_base_vs_chat_markup": {
+  "observed_diff": 0.017427884615384623,
+  "ci95": [
+   -0.004507211538461536,
+   0.039062499999999986
+  ],
+  "p_one_sided_base_le_chat": 0.0624
+ }
+}
