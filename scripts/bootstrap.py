@@ -18,6 +18,7 @@ Output: out/bootstrap_analysis.json + printed report.
 import json
 import re
 import unicodedata
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -27,14 +28,16 @@ OUT = ROOT / "out"
 N_BOOT = 10_000
 SEED = 12345
 
+SFX = sys.argv[1] if len(sys.argv) > 1 else ""  # e.g. "_main300"
+
 qwen_snap = sorted((ROOT / "models" / "models--Qwen--Qwen2.5-3B" / "snapshots").iterdir())[-1]
 
 MODELS = {
-    "mla_chat": {"npz": OUT / "v2lite_stats.npz",
+    "mla_chat": {"npz": OUT / f"v2lite_stats{SFX}.npz",
                  "tok": ROOT / "tokenizer"},
-    "mla_base": {"npz": OUT / "v2lite_base_stats.npz",
+    "mla_base": {"npz": OUT / f"v2lite_base_stats{SFX}.npz",
                  "tok": ROOT / "tokenizer"},
-    "gqa_base": {"npz": OUT / "qwen25_stats.npz", "tok": qwen_snap},
+    "gqa_base": {"npz": OUT / f"qwen25_stats{SFX}.npz", "tok": qwen_snap},
 }
 
 
@@ -168,8 +171,8 @@ def main() -> None:
     print(f"[paired] base-chat markup diff: {obs_d:+.3f} CI95=[{lo:+.3f},{hi:+.3f}] "
           f"p(base<=chat)={max(p_neg, 1/N_BOOT):.1e}")
 
-    OUT.joinpath("bootstrap_analysis.json").write_text(json.dumps(report, indent=1))
-    print(f"\nSaved {OUT/'bootstrap_analysis.json'}")
+    OUT.joinpath(f"bootstrap_analysis{SFX}.json").write_text(json.dumps(report, indent=1))
+    print(f"\nSaved {OUT/f'bootstrap_analysis{SFX}.json'}")
 
 
 if __name__ == "__main__":

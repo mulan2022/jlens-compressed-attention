@@ -9,6 +9,7 @@ its weights + lens are local.
 """
 
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -17,6 +18,8 @@ from safetensors import safe_open
 
 ROOT = Path(__file__).parent.parent
 OUT = ROOT / "out"
+
+SFX = sys.argv[1] if len(sys.argv) > 1 else ""  # e.g. "_main300"
 
 qwen_snap = sorted((ROOT / "models" / "models--Qwen--Qwen2.5-3B" / "snapshots").iterdir())[-1]
 sf_files = sorted(qwen_snap.glob("model-*.safetensors"))
@@ -32,11 +35,11 @@ def load_tensor(name):
     raise KeyError(name)
 
 
-lens = torch.load(OUT / "qwen25_lens.pt", map_location="cpu", weights_only=True)
+lens = torch.load(OUT / f"qwen25_lens{SFX}.pt", map_location="cpu", weights_only=True)
 J = {l: t.float() for l, t in lens["J"].items()}
 W_E = load_tensor("model.embed_tokens.weight")  # tied -> also unembedding
 
-d = np.load(OUT / "qwen25_stats.npz", allow_pickle=True)
+d = np.load(OUT / f"qwen25_stats{SFX}.npz", allow_pickle=True)
 layers_arr, tids = d["layers_arr"], d["token_ids"]
 lens_layers = sorted(set(layers_arr.tolist()))
 

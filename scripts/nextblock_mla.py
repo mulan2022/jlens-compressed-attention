@@ -8,6 +8,7 @@ top-8). Weights read via safetensors slicing; no model forward.
 """
 
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -16,6 +17,8 @@ from safetensors import safe_open
 
 ROOT = Path(__file__).parent.parent
 OUT = ROOT / "out"
+
+SFX = sys.argv[1] if len(sys.argv) > 1 else ""  # e.g. "_main300"
 MODEL = ROOT / "models" / "DeepSeek-V2-Lite-Chat"
 
 sf_files = sorted(MODEL.glob("model-*.safetensors"))
@@ -32,11 +35,11 @@ def load_tensor(name):
     raise KeyError(name)
 
 
-lens = torch.load(OUT / "v2lite_chat_lens.pt", map_location="cpu", weights_only=True)
+lens = torch.load(OUT / f"v2lite_chat_lens{SFX}.pt", map_location="cpu", weights_only=True)
 J = {l: t.float() for l, t in lens["J"].items()}
 W_U = load_tensor("lm_head.weight")
 
-d = np.load(OUT / "v2lite_stats.npz", allow_pickle=True)
+d = np.load(OUT / f"v2lite_stats{SFX}.npz", allow_pickle=True)
 layers_arr, tids = d["layers_arr"], d["token_ids"]
 lens_layers = sorted(set(layers_arr.tolist()))
 

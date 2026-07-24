@@ -11,6 +11,7 @@ Outputs: out/local_analysis.json (numbers for the paper) + printed report.
 
 import json
 import re
+import sys
 import unicodedata
 from collections import defaultdict
 from pathlib import Path
@@ -20,16 +21,18 @@ import numpy as np
 ROOT = Path(__file__).parent.parent
 OUT = ROOT / "out"
 
+SFX = sys.argv[1] if len(sys.argv) > 1 else ""  # e.g. "_main300"
+
 MODELS = {
     "mla": {
-        "npz": OUT / "v2lite_stats.npz",
-        "lens": OUT / "v2lite_chat_lens.pt",
+        "npz": OUT / f"v2lite_stats{SFX}.npz",
+        "lens": OUT / f"v2lite_chat_lens{SFX}.pt",
         "tok_dir": ROOT / "tokenizer",
         "label": "DeepSeek-V2-Lite (MLA)",
     },
     "gqa": {
-        "npz": OUT / "qwen25_stats.npz",
-        "lens": OUT / "qwen25_lens.pt",
+        "npz": OUT / f"qwen25_stats{SFX}.npz",
+        "lens": OUT / f"qwen25_lens{SFX}.pt",
         "tok_dir": None,  # resolved below (HF snapshot dir)
         "label": "Qwen2.5-3B (GQA)",
     },
@@ -272,5 +275,5 @@ for key, m in MODELS.items():
 
     report[f"{key}_sec4"] = rep
 
-OUT.joinpath("local_analysis.json").write_text(json.dumps(report, indent=1))
-print(f"\nSaved {OUT/'local_analysis.json'}")
+OUT.joinpath(f"local_analysis{SFX}.json").write_text(json.dumps(report, indent=1))
+print(f"\nSaved {OUT/f'local_analysis{SFX}.json'}")

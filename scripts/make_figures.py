@@ -2,6 +2,7 @@
 """Generate revision figures: cross-layer heatmaps, positive control, CJK share."""
 
 import json
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -12,12 +13,14 @@ import numpy as np
 OUT = Path(__file__).parent.parent / "out"
 plt.rcParams.update({"font.size": 9, "axes.titlesize": 10})
 
-mla = np.load(OUT / "mla_remote.npz", allow_pickle=True)
-gqa = np.load(OUT / "gqa_remote.npz", allow_pickle=True)
+SFX = sys.argv[1] if len(sys.argv) > 1 else ""  # e.g. "_main300"
+
+mla = np.load(OUT / f"mla_remote{SFX}.npz", allow_pickle=True)
+gqa = np.load(OUT / f"gqa_remote{SFX}.npz", allow_pickle=True)
 mla_raw = np.load(OUT / "mla_raw.npz")
 gqa_raw_p = OUT / "gqa_raw.npz"
 gqa_raw = np.load(gqa_raw_p) if gqa_raw_p.exists() else None
-loc = json.loads((OUT / "local_analysis.json").read_text())
+loc = json.loads((OUT / f"local_analysis{SFX}.json").read_text())
 
 # ── Fig: cross-layer heatmaps ───────────────────────────────────────────────
 fig, axes = plt.subplots(
@@ -49,9 +52,9 @@ for col, (d, raw, name) in enumerate(
 
 cbar = fig.colorbar(im, ax=axes[:, :], fraction=0.025, pad=0.02)
 cbar.set_label("energy fraction $-$ 0.250 (baseline)")
-fig.savefig(OUT / "crosslayer.png", dpi=200, bbox_inches="tight")
+fig.savefig(OUT / f"crosslayer{SFX}.png", dpi=200, bbox_inches="tight")
 plt.close(fig)
-print("saved crosslayer.png")
+print(f"saved crosslayer{SFX}.png")
 
 # ── Fig: positive control (standalone) ──────────────────────────────────────
 fig, axL = plt.subplots(1, 1, figsize=(4.4, 3.2))
@@ -65,9 +68,9 @@ axL.set_xlabel(r"planted in-subspace energy $\alpha$")
 axL.set_ylabel("measured energy fraction")
 axL.legend(frameon=False, fontsize=8, loc="upper left")
 fig.tight_layout()
-fig.savefig(OUT / "positive_control.png", dpi=200, bbox_inches="tight")
+fig.savefig(OUT / f"positive_control{SFX}.png", dpi=200, bbox_inches="tight")
 plt.close(fig)
-print("saved positive_control.png")
+print(f"saved positive_control{SFX}.png")
 
 # ── Fig: CJK share (standalone) ─────────────────────────────────────────────
 fig, axR = plt.subplots(1, 1, figsize=(4.4, 3.2))
@@ -87,9 +90,9 @@ axR.legend(frameon=False, fontsize=8)
 axR.set_ylim(0, 0.7)
 
 fig.tight_layout()
-fig.savefig(OUT / "cjk_share.png", dpi=200, bbox_inches="tight")
+fig.savefig(OUT / f"cjk_share{SFX}.png", dpi=200, bbox_inches="tight")
 plt.close(fig)
-print("saved cjk_share.png")
+print(f"saved cjk_share{SFX}.png")
 
 # summary numbers for the tex
 print("\nMLA cross-layer top cells (E):")

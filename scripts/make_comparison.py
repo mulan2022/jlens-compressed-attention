@@ -9,6 +9,7 @@ boxplot by category. Data: out/v2lite_stats.npz, out/qwen25_stats.npz.
 """
 
 import os
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -19,6 +20,8 @@ from matplotlib.colors import TwoSlopeNorm
 
 OUT = Path(__file__).parent.parent / "out"
 
+SFX = sys.argv[1] if len(sys.argv) > 1 else ""  # e.g. "_main300"
+
 CATEGORY_COLORS = {
     "factual_en": "#2196F3", "factual_zh": "#F44336", "code_logic": "#4CAF50",
     "sentiment": "#FF9800", "random": "#9E9E9E",
@@ -26,8 +29,8 @@ CATEGORY_COLORS = {
 CATEGORY_ORDER = ["factual_en", "factual_zh", "code_logic", "sentiment", "random"]
 
 ROWS = [
-    ("A", OUT / "v2lite_stats.npz", "DeepSeek-V2-Lite (MLA, OV-rank 512)"),
-    ("B", OUT / "qwen25_stats.npz", "Qwen2.5-3B (GQA, OV-rank 256)"),
+    ("A", OUT / f"v2lite_stats{SFX}.npz", "DeepSeek-V2-Lite (MLA, OV-rank 512)"),
+    ("B", OUT / f"qwen25_stats{SFX}.npz", "Qwen2.5-3B (GQA, OV-rank 256)"),
 ]
 
 plt.rcParams.update({"font.size": 9.5, "axes.titlesize": 10, "axes.labelsize": 9.5})
@@ -120,7 +123,7 @@ for row, (tag, npz, model_name) in enumerate(ROWS):
     ax.set_ylabel("$z$-score")
     ax.set_title(f"{tag}2  by category", loc="left")
 
-fig.savefig(OUT / "comparison_stats.png", dpi=200, bbox_inches="tight",
+fig.savefig(OUT / f"comparison_stats{SFX}.png", dpi=200, bbox_inches="tight",
             facecolor="white")
-print(f"saved {OUT/'comparison_stats.png'} "
-      f"({os.path.getsize(OUT/'comparison_stats.png')/1024:.0f} KB)")
+print(f"saved {OUT/f'comparison_stats{SFX}.png'} "
+      f"({os.path.getsize(OUT/f'comparison_stats{SFX}.png')/1024:.0f} KB)")
